@@ -176,6 +176,7 @@ typedef struct hal_info_s {
     struct cld80211_ctx *cldctx;
     bool apf_enabled;
     pkt_log_version  pkt_log_ver;
+    bool support_nan_ext_cmd;
 } hal_info;
 
 wifi_error wifi_register_handler(wifi_handle handle, int cmd, nl_recvmsg_msg_cb_t func, void *arg);
