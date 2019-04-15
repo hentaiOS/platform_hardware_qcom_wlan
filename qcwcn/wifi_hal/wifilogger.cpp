@@ -957,7 +957,7 @@ wifi_error WifiLoggerCommand::requestEvent()
 {
     int status;
     wifi_error res = WIFI_SUCCESS;
-    struct nl_cb *cb;
+    struct nl_cb *cb = NULL;
 
     cb = nl_cb_alloc(NL_CB_DEFAULT);
     if (!cb) {
@@ -998,6 +998,7 @@ wifi_error WifiLoggerCommand::requestEvent()
             __FUNCTION__, res, mWaitforRsp);
     }
 out:
+    nl_cb_put(cb);
     /* Cleanup the mMsg */
     mMsg.destroy();
     return res;
