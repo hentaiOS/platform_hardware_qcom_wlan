@@ -882,6 +882,12 @@ wifi_error wifi_initialize(wifi_handle *handle)
         goto unload;
     }
 
+    ret = initializeRadioHandler(info);
+    if (ret != WIFI_SUCCESS) {
+        ALOGE("Initializing Radio Event handler Failed");
+        goto unload;
+    }
+
     ALOGV("Initialized Wifi HAL Successfully; vendor cmd = %d Supported"
             " features : 0x%" PRIx64, NL80211_CMD_VENDOR, info->supported_feature_set);
 
@@ -907,6 +913,7 @@ unload:
             wifi_logger_ring_buffers_deinit(info);
             cleanupGscanHandlers(info);
             cleanupRSSIMonitorHandler(info);
+            cleanupRadioHandler(info);
             free(info->event_cb);
             if (info->driver_supported_features.flags) {
                 free(info->driver_supported_features.flags);
@@ -1045,7 +1052,7 @@ static void internal_cleaned_up_handler(wifi_handle handle)
     wifi_logger_ring_buffers_deinit(info);
     cleanupGscanHandlers(info);
     cleanupRSSIMonitorHandler(info);
-
+    cleanupRadioHandler(info);
     if (info->num_event_cb)
         ALOGE("%d events were leftover without being freed",
               info->num_event_cb);
